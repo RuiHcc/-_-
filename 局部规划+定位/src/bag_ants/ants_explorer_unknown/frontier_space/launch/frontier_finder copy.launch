@@ -1,0 +1,119 @@
+<launch>
+  <!-- <arg name="cars_num" /> -->
+  <arg name="car_id" value="0"/>
+  <arg name="namespace" value="ant01"/>
+
+  <arg name="drone_id" value="$(arg car_id)"/>
+  <arg name="car_width" value="0.6"/>
+  <arg name="car_length" value="0.6"/>
+
+  <arg name="map_size_x" value="400"/>
+  <arg name="map_size_y" value="400"/>
+  <arg name="map_size_z" value="3.0"/>
+  <arg name="map_origin_x" default="-200"/>
+  <arg name="map_origin_y" default="-200"/>
+  <arg name="map_origin_z" default="0.0"/>
+
+  <arg name="localmap_size_x" default="10"/>
+  <arg name="localmap_size_y" default="10"/>
+  <arg name="localmap_size_z" value="3.2"/>
+  <arg name="localmap_size_inflate" value="2"/>
+
+  <arg name="origin_x" value="-10"/>
+  <arg name="origin_y" value="-10"/>
+  <arg name="origin_z" value="0.0"/>
+
+  <arg name="max_height" value="0.3"/>
+  <arg name="use_l_planner" value="false"/>
+  <arg name="use_sim" value="true"/>
+
+  <arg name="odom_topic" value="/$(arg car_id)/state_estimation" />
+  <arg name="lidar_topic" value="/drone_$(arg drone_id)_lidar_slam/pcl"/>
+  <!-- <arg name="vel_topic" value="/diablo_ctrl/diablo_leg_motors"/> -->
+  <arg name="traj_topic" value="/minco_traj" />  
+
+  <node pkg="nodelet" type="nodelet" name="manager" args="manager" output="screen">
+    <param name="num_worker_threads" value="4"/>
+  </node>
+
+  <node pkg="nodelet" type="nodelet" name="mapping" args="load mapping/Nodelet manager" output="screen">
+    <remap from="~odom" to="/ant01/state_estimation"/>
+    <remap from="~local_pointcloud" to="/ant01/registered_scan"/>
+    <remap from="~gridmap" to="gridmap"/>
+    <remap from="~gridmap_inflate" to="gridmap_inflate"/>
+
+    <param name="resolution" value="0.2"/>
+    <param name="global_map_x" value="40"/>
+    <param name="global_map_y" value="40"/>
+    <param name="global_map_z" value="1.6"/>
+    <param name="global_map_origin_x" value="-20"/>
+    <param name="global_map_origin_y" value="-20"/>
+    <param name="global_map_origin_z" value="0"/>
+    <param name="local_x" value="32"/>
+    <param name="local_y" value="32"/>
+    <param name="local_z" value="3.2"/>
+    <param name="inflate_size" value="2"/>
+    <param name="extract_surface_radius"      value="0.4" type="double"/> 
+    <param name="extract_surface_z_max_thr"      value="0.1" /> 
+    <param name="extract_surface_neighbor_thr"      value="9" /> 
+  </node>
+
+  <node name="mapping_vis" pkg="mapping" type="mapping_vis_node">
+    <remap from="~gridmap" to="/gridmap"/>
+    <remap from="~gridmap_inflate" to="/gridmap_inflate"/>
+    <param name="z_max" value="2.2" type="double"/>
+  </node>
+
+
+  <!-- main algorithm params -->
+  <include file="$(find frontier_space)/launch/advanced_param_5_sim.xml">
+
+    <!-- enum TARGET_TYPE
+    {
+      MANUAL_TARGET = 1,
+      EXPLORE_TARGET = 2,
+      PRESET_TARGET = 3,
+      REFENCE_PATH = 4
+    }; -->
+    <arg name="flight_type" value="2" />
+
+    <arg name="car_id" value="$(arg car_id)"/>
+    <arg name="car_width" value="$(arg car_width)"/>
+    <arg name="car_length" value="$(arg car_length)"/>
+    
+    <arg name="map_size_x" value="$(arg map_size_x)"/>
+    <arg name="map_size_y" value="$(arg map_size_y)"/>
+    <arg name="map_size_z" value="$(arg map_size_z)"/>
+    <arg name="global_map_origin_x_" value="$(arg map_origin_x)"/>
+    <arg name="global_map_origin_y_" value="$(arg map_origin_y)"/>
+    <arg name="global_map_origin_z_" value="$(arg map_origin_z)"/>
+    <arg name="drone_id" value="$(arg drone_id)"/>
+
+    <arg name="localmap_size_x" value="$(arg localmap_size_x)"/>
+    <arg name="localmap_size_y" value="$(arg localmap_size_y)"/>
+    <arg name="localmap_size_z" value="$(arg localmap_size_z)"/>
+    <arg name="localmap_size_inflate" value="$(arg localmap_size_inflate)"/>
+
+    <arg name="origin_x" value="$(arg origin_x)"/>
+    <arg name="origin_y" value="$(arg origin_y)"/>
+    <arg name="origin_z" value="$(arg origin_z)"/>
+
+    <arg name="lidar_height" value="$(arg max_height)"/>
+
+    <arg name="odometry_topic" value="$(arg odom_topic)"/>
+    <arg name="lidar_topic" value="$(arg lidar_topic)"/>
+    <!-- <arg name="traj_topic" value="$(arg traj_topic)"/> -->
+
+    <!-- maximum velocity and acceleration the car will reach -->
+    <arg name="max_vel" value="0.6" />
+    <arg name="max_acc" value="0.6" />
+    <arg name="max_cur" value="2.0" />
+    <arg name="max_yaw_dot" value="2.2" />
+
+    <arg name="planning_horizon" value="5.0" />
+    <arg name="tracking_range" value="1.0" />
+
+  </include>
+
+
+</launch>

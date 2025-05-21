@@ -1,0 +1,19 @@
+<launch>
+    <arg name="namespace" default="ant01"/>
+
+        <node pkg="ants_location_interface" type="antsLocationInterface" name="LocationInterface" output="screen" required="true">
+            <!-- 接口话题重命名 -->
+            <!-- <param name="stateEstimationTopic" type="string" value="Odometry" /> -->
+            <param name="stateEstimationTopic" type="string" value="ekf/ekf_odom" />
+            <param name="registeredScanTopic" type="string" value="registered_scan0" />
+            <remap from="/registered_scan" to="registered_scan" />
+            <remap from="/state_estimation" to="state_estimation" />
+            <!-- 话题处理选项 -->
+            <param name="flipStateEstimation" type="bool" value="false" />
+            <param name="flipRegisteredScan" type="bool" value="false" />
+            <param name="sendTF" type="bool" value="true" />
+            <param name="reverseTF" type="bool" value="false" />
+            <param name="NameSpace" type="string" value="$(arg namespace)" />
+
+        </node>
+</launch>

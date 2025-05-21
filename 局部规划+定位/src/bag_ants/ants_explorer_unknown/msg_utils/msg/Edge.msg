@@ -1,0 +1,5 @@
+int8 posegraph_from_id
+int32 key_pose_inx_from
+int8 posegraph_to_id
+int32 key_pose_inx_to
+float32 dis

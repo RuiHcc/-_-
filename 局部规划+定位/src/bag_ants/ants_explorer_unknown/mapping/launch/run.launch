@@ -1,0 +1,31 @@
+<launch>
+
+  <!-- <node name="rviz" pkg="rviz" type="rviz" args="-d $(find mapping)/config/rviz_sim.rviz">
+  </node> -->
+
+  <group ns="drone0">
+    <node pkg="nodelet" type="nodelet" name="manager" args="manager" output="screen">
+      <param name="num_worker_threads" value="16"/>
+    </node>
+
+    <node pkg="nodelet" type="nodelet" name="mapping" args="load mapping/Nodelet manager" output="screen">
+      <rosparam file="$(find lio_sam)/config/params.yaml"/>
+      <!-- <rosparam file="$(find dypa02)/config/params.yaml"/> -->
+      <remap from="~odom" to="/odometry/imu_body_incremental"/>
+      <!-- <remap from="~local_pointcloud" to="/lio_sam/deskew/cloud_deskewed"/> -->
+      <remap from="~local_pointcloud" to="/detection_filter_node/without_car_point_cloud"/>
+      <remap from="~gridmap" to="gridmap"/>
+      <remap from="~gridmap_inflate" to="gridmap_inflate"/>
+      <remap from="~up_distance" to="up_distance"/>
+      <remap from="~dn_distance" to="dn_distance"/>
+      <param name="resolution" value="0.2"/>
+      <param name="local_x" value="26"/>
+      <param name="local_y" value="26"/>
+      <param name="local_z" value="8"/>
+      <param name="inflate_size" value="4"/>
+    </node>
+
+  </group>
+
+
+</launch>

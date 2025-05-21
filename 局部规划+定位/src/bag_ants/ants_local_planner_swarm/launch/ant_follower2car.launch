@@ -1,0 +1,66 @@
+<launch>
+    <arg name="namespace" default="ant02"/>
+    <arg name="ID" default="1"/>
+    <arg name="formation_length_unit" default="2.5"/>
+    <arg name="cubic_spline_hz" default="10.0"/>
+    <arg name="Kp" default="0.25"/>
+    <arg name="Ki" default="0.0"/>
+    <arg name="Kd" default="0.0"/>
+    <arg name="Kp2" default="0.25"/>
+    <arg name="Ki2" default="0.05"/>
+    <arg name="Kd2" default="0.0"/>
+    <arg name="Kp1" default="0.45"/>
+    <arg name="Kd1" default="0.25"/>
+    <arg name="overall_length" default="4"/>
+    <arg name="formation_type" default="0"/>
+    <arg name="controller_type" default="1"/>
+    <arg name="headway" default="3"/>
+    <arg name="emlike_hz" default="25"/>
+    <arg name="add_lateral_threshold" default="0.3"/>
+    <arg name="add_yaw_threshold" default="0.52"/>
+    <arg name="vmin" default="0.0"/>
+    <arg name="vmax" default="2.0"/>
+    <arg name="max_deceleration" default="0.3"/>
+    <arg name="max_acceleration" default="0.3"/>
+    <arg name="forecast_time" default="0.8"/>
+    <arg name="reconfiguration_duration" default="3.0"/>
+<!-- output="screen" -->
+    <group ns = "$(arg namespace)">
+    <!-- 主路径生成 + 编队队形变化管理 -->
+      <node pkg="ants_local_planner_swarm" type="ants_local_planner_swarm" name="ants_local_planner_swarm"  required="true">
+        <param name="NameSpace" type="string" value="$(arg namespace)" />
+        <param name="ID" type="int" value="$(arg ID)" />
+        <param name = "formation_length_unit" type="double" value = "$(arg formation_length_unit)"/>
+        <param name = "cubic_spline_hz" type="double" value = "$(arg cubic_spline_hz)"/>
+        <param name = "standard_step" type="double" value = "0.1"/>
+      </node>
+
+
+      <node pkg="ants_paths_follower" type="liner_speed_regulator" name="liner_speed_regulator" output="screen" respawn="true">
+        <param name="ID" type="int" value="$(arg ID)" />
+        <param name="NameSpace" type="string" value="$(arg namespace)" />
+        <param name="Kp" type="double" value="$(arg Kp)" />
+        <param name="Ki" type="double" value="$(arg Ki)" />
+        <param name="Kd" type="double" value="$(arg Kd)" />
+        <param name="Kp2" type="double" value="$(arg Kp2)" />
+        <param name="Ki2" type="double" value="$(arg Ki2)" />
+        <param name="Kd2" type="double" value="$(arg Kd2)" />
+        <param name="Kp1" type="double" value="$(arg Kp1)" />
+        <param name="Kd1" type="double" value="$(arg Kd1)" />
+        <param name="overall_length" type="double" value="$(arg overall_length)" />
+        <param name="formation_type" type="int" value="$(arg formation_type)" />
+        <param name="controller_type" type="int" value="$(arg controller_type)" />
+        <param name="headway" type="double" value="$(arg headway)" />
+        <param name="emlike_hz" type="double" value="$(arg emlike_hz)" />
+        <param name="add_lateral_threshold" type="double" value="$(arg add_lateral_threshold)" />
+        <param name="add_yaw_threshold" type="double" value="$(arg add_yaw_threshold)" />
+        <param name="vmin" type="double" value="$(arg vmin)" />
+        <param name="vmax" type="double" value="$(arg vmax)" />
+        <param name="max_deceleration" type="double" value="$(arg max_deceleration)" />
+        <param name="max_acceleration" type="double" value="$(arg max_acceleration)" />
+        <param name="forecast_time" type="double" value="$(arg forecast_time)" />
+        <param name="reconfiguration_duration" type="double" value="$(arg reconfiguration_duration)" />
+      </node>
+    </group>
+
+</launch>

@@ -1,0 +1,69 @@
+<launch>
+  <arg name="namespace" default="ant05"/>
+  <arg name="sensorOffsetX" default="0"/>
+  <arg name="sensorOffsetY" default="0"/>
+  <arg name="cameraOffsetZ" default="0"/>
+  <arg name="twoWayDrive" default="false"/>
+  <arg name="maxSpeed" default="5.0"/>
+  <arg name="autonomyMode" default="true"/>
+  <arg name="autonomySpeed" default="2.0"/>
+  <arg name="joyToSpeedDelay" default="2.0"/>
+  <arg name="goalX" default="0"/>
+  <arg name="goalY" default="0"/>
+  
+
+  <group ns = "$(arg namespace)">
+
+    <node pkg="ants_paths_follower" type="ants_paths_follower_swarm" name="ants_paths_follower" output="screen" required="true">
+      <param name="sensorOffsetX" value="$(arg sensorOffsetX)" />
+      <param name="sensorOffsetY" value="$(arg sensorOffsetY)" />
+      <param name="pubSkipNum" type="int" value="1" />
+      <param name="twoWayDrive" value="$(arg twoWayDrive)" />
+      <param name="lookAheadDis" type="double" value="0.5" />
+      <param name="yawRateGain" type="double" value="7.5" />
+      <param name="stopYawRateGain" type="double" value="7.5" />
+      <param name="maxYawRate" type="double" value="90.0" />
+      <param name="maxSpeed" value="$(arg maxSpeed)" />
+      <param name="maxAccel" type="double" value="2.5" />
+      <param name="switchTimeThre" type="double" value="1.0" />
+      <param name="dirDiffThre" type="double" value="0.1" />
+      <param name="stopDisThre" type="double" value="0.2" />
+      <param name="slowDwnDisThre" type="double" value="0.85" />
+      <param name="useInclRateToSlow" type="bool" value="false" />
+      <param name="inclRateThre" type="double" value="120.0" />
+      <param name="slowRate1" type="double" value="0.25" />
+      <param name="slowRate2" type="double" value="0.5" />
+      <param name="slowTime1" type="double" value="2.0" />
+      <param name="slowTime2" type="double" value="2.0" />
+      <param name="useInclToStop" type="bool" value="false" />
+      <param name="inclThre" type="double" value="45.0" />
+      <param name="stopTime" type="double" value="5.0" />
+      <param name="noRotAtStop" type="bool" value="true" />
+      <param name="noRotAtGoal" type="bool" value="true" />
+      <param name="autonomyMode" value="$(arg autonomyMode)" />
+      <param name="autonomySpeed" value="$(arg autonomySpeed)" />
+      <param name="joyToSpeedDelay" value="$(arg joyToSpeedDelay)" />
+      <param name="NameSpace" type="string" value="$(arg namespace)" />
+    </node>
+
+    <!-- 与底盘UDP通信部分，首先启动操纵端，然后启动通信端发送指令并解析回报的数据 -->
+    <node pkg="ants_paths_follower" type="UdpRemote" name="UdpRemote" output="screen" respawn="true">
+      <param name="send_port" type="int" value="1234" />
+      <param name="receive_port" type="int" value="12345" />
+      <param name="server_ip" type="string" value="127.0.0.14" />
+      <param name="client_ip" type="string" value="127.0.0.15" />
+    </node>
+
+
+    <node pkg="ants_paths_follower" type="UdpVehicle" name="UdpVehicle" output="screen" required="true">
+      <param name="send_port" type="int" value="1234" />
+      <param name="receive_port" type="int" value="12345" />
+      <param name="server_ip" type="string" value="127.0.0.14" />
+      <param name="client_ip" type="string" value="127.0.0.13" />
+    </node>
+
+    <node pkg="tf" type="static_transform_publisher" name="vehicleTransPublisher" args="-$(arg sensorOffsetX) -$(arg sensorOffsetY) 0 0 0 0 $(arg namespace)/sensor $(arg namespace)/vehicle 1000"/>
+
+    <node pkg="tf" type="static_transform_publisher" name="sensorTransPublisher" args="0 0 $(arg cameraOffsetZ) -1.5707963 0 -1.5707963 $(arg namespace)/sensor $(arg namespace)/camera 1000"/>
+  </group>
+</launch>

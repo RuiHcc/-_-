@@ -1,0 +1,50 @@
+<launch>
+	<rosparam command="load" file="$(find fast_lio)/config/avia.yaml" />
+
+    <!-- fast_lio启动 -->
+	<param name="feature_extract_enable" type="bool" value="0"/>
+	<param name="point_filter_num" type="int" value="20"/>
+	<param name="max_iteration" type="int" value="3" />
+	<param name="filter_size_surf" type="double" value="0.5" />
+	<param name="filter_size_map" type="double" value="0.5" />
+	<param name="cube_side_length" type="double" value="1000" />
+	<param name="runtime_pos_log_enable" type="bool" value="0" />
+    <node pkg="fast_lio" type="fastlio_mapping2" name="laserMapping" output="screen" > 
+	<remap from="/cloud_registered" to="registered_scan"/>
+    <remap from="/cloud_registered_body" to="cloud_registered_body"/>
+    <remap from="/cloud_effected" to="cloud_effected"/>
+    <remap from="/Laser_map" to="Laser_map"/>
+    <remap from="/Odometry" to="Odometry"/>
+    <remap from="/path" to="path_slam"/>
+	</node>
+
+	<node pkg="ekf" type="ekf" name="ekf" output="screen">
+        <!-- <remap from="~imu" to="/mavros/imu/data"/> -->
+        <remap from="~imu" to="livox/imu"/>
+
+        <remap from="~bodyodometry" to="Odometry"/> 
+		<!-- <remap from="~bodyodometry" to="/ant01/state_estimation"/>  -->
+        <!-- <remap from="~bodyodometry" to="/vrpn_client_node/pn_lidar5/pose"/>  -->
+
+        <!-- <remap from="~ekf_odom" to="/ekf/ekf_odom"/> -->
+		<!-- modification -->
+		<!-- <remap from="~ekf_odom" to="/ant01/state_estimation"/> -->
+
+        <!-- parms -->
+        <rosparam file="$(find ekf)/launch/PX4_vio_drone.yaml" command="load" />
+
+        <!--body in IMU frame-->
+        <param name="imu_trans_x" type="double" value="0.0"/> 
+        <param name="imu_trans_y" type="double" value="0.0"/> 
+        <param name="imu_trans_z" type="double" value="0.0"/> 
+
+        <!-- Qt -->
+        <param name="gyro_cov" type="double" value="0.2"/> 
+        <param name="acc_cov" type="double" value="1.0"/>
+        <!-- Rt -->
+        <param name="position_cov" type="double" value="0.0005"/>
+        <param name="q_rp_cov" type="double" value="0.01"/>
+        <param name="q_yaw_cov" type="double" value="0.01"/>   
+    </node>
+
+</launch>

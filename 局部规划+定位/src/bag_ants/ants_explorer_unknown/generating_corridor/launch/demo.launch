@@ -1,0 +1,11 @@
+<launch>
+
+<node name="rviz" pkg="rviz" type="rviz" 
+  args="-d $(find generating_corridor)/config/demo.rviz">
+</node>
+
+<node pkg="generating_corridor" type="demo" name="demo" output="screen">
+  <rosparam file="$(find generating_corridor)/config/demo.yaml"/>
+</node>
+
+</launch>

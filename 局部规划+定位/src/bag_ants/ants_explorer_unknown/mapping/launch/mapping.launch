@@ -1,0 +1,83 @@
+<launch>
+  <node pkg="nodelet" type="nodelet" name="manager" args="manager" output="screen">
+    <param name="num_worker_threads" value="4"/>
+  </node>
+
+  <node pkg="nodelet" type="nodelet" name="mapping" args="load mapping/Nodelet manager" output="screen">
+    <remap from="~odom" to="/ant01/state_estimation"/>
+    <remap from="~local_pointcloud" to="/ant01/registered_scan"/>
+    <remap from="~gridmap" to="gridmap"/>
+    <remap from="~gridmap_inflate" to="gridmap_inflate"/>
+
+    <param name="resolution" value="0.2"/>
+    <param name="global_map_x" value="40"/>
+    <param name="global_map_y" value="40"/>
+    <param name="global_map_z" value="1.6"/>
+    <param name="global_map_origin_x" value="-20"/>
+    <param name="global_map_origin_y" value="-20"/>
+    <param name="global_map_origin_z" value="0"/>
+    <param name="local_x" value="32"/>
+    <param name="local_y" value="32"/>
+    <param name="local_z" value="3.2"/>
+    <param name="inflate_size" value="2"/>
+    <param name="extract_surface_radius"      value="0.4" type="double"/> 
+    <param name="extract_surface_z_max_thr"      value="0.1" /> 
+    <param name="extract_surface_neighbor_thr"      value="9" /> 
+  </node>
+
+  <node name="mapping_vis" pkg="mapping" type="mapping_vis_node">
+    <remap from="~gridmap" to="/gridmap"/>
+    <remap from="~gridmap_inflate" to="/gridmap_inflate"/>
+    <param name="z_max" value="2.2" type="double"/>
+  </node>
+
+
+</launch>
+
+<!-- <launch>
+
+  <arg name="map_size_x" value="40"/>
+  <arg name="map_size_y" value="40"/>
+  <arg name="map_size_z" value="1.6"/>
+  <arg name="map_origin_x" default="-20"/>
+  <arg name="map_origin_y" default="-20"/>
+  <arg name="map_origin_z" default="0.0"/>
+
+  <arg name="localmap_size_x" default="32"/>
+  <arg name="localmap_size_y" default="32"/>
+  <arg name="localmap_size_z" value="3.2"/>
+  <arg name="localmap_size_inflate" value="2"/>
+
+  <node pkg="nodelet" type="nodelet" name="car1_manager" args="manager" output="screen">
+    <param name="num_worker_threads" value="4"/>
+  </node>
+
+  <node pkg="nodelet" type="nodelet" name="car1_mapping" args="load mapping/Nodelet car1manager" output="screen">
+    <remap from="~odom" to="/ant01/state_estimation"/>
+    <remap from="~local_pointcloud" to="/ant01/velodyne_points"/>
+    <remap from="~gridmap" to="/gridmap"/>
+    <remap from="~gridmap_inflate" to="/gridmap_inflate"/>
+    <remap from="~surface" to="surface"/>
+    <param name="resolution" value="0.2"/>
+    <param name="global_map_x" value="$(arg map_size_x)"/>
+    <param name="global_map_y" value="$(arg map_size_y)"/>
+    <param name="global_map_z" value="$(arg map_size_z)"/>
+    <param name="global_map_origin_x" value="$(arg map_origin_x)"/>
+    <param name="global_map_origin_y" value="$(arg map_origin_y)"/>
+    <param name="global_map_origin_z" value="$(arg map_origin_z)"/>
+    <param name="local_x" value="$(arg localmap_size_x)"/>
+    <param name="local_y" value="$(arg localmap_size_y)"/>
+    <param name="local_z" value="$(arg localmap_size_z)"/>
+    <param name="inflate_size" value="$(arg localmap_size_inflate)"/>
+    <param name="extract_surface_radius"      value="0.4" type="double"/> 
+    <param name="extract_surface_z_max_thr"      value="0.1" /> 
+    <param name="extract_surface_neighbor_thr"      value="9" /> 
+  </node>
+
+  <node name="car1_mapping_vis" pkg="mapping" type="mapping_vis_node">
+    <remap from="~gridmap" to="/gridmap"/>
+    <remap from="~gridmap_inflate" to="/gridmap_inflate"/>
+    <param name="z_max" value="2.2" type="double"/>
+  </node>
+
+  </launch> -->

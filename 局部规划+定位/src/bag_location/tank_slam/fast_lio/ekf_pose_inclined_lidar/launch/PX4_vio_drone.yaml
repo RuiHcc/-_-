@@ -1,0 +1,4 @@
+# Rr_i:      [0.991, 0, -0.131, 0]     #ekf bag     ##car   #quaterniod(w,x,y,z)  
+Rr_i:      [1, 0, 0, 0]     #ekf bag     ##car   #quaterniod(w,x,y,z)  
+tr_i:       [0.00, 0.0, 0.00] #ekf bag     #[0, 0, 0.]   #car
+Rr_i_imu:      [0.9848077535291953, 0, 0.17364817473495014, 0] # 20deg

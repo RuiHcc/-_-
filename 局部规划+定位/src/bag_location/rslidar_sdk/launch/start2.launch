@@ -1,0 +1,5 @@
+<launch>
+  <node pkg="rslidar_sdk" name="rslidar_sdk_node" type="rslidar_sdk_node" output="screen" ns="No_2">
+   <remap from="/rslidar_points" to="/No_2/rslidar_points"/> 
+  </node>
+</launch>

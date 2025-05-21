@@ -1,0 +1,9 @@
+<library path="lib/libformation_type_plugin">
+    <class name="rviz/FormationType"
+           type="formation_type_plugin::FormationtypePub"
+           base_class_type="rviz::Panel">
+        <description>
+            A tool for sending formation type to ants swarm
+        </description>
+    </class>
+</library>

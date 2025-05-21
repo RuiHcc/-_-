@@ -1,0 +1,84 @@
+<launch>
+
+        <include file="$(find ants_local_planner_swarm)/launch/ant_follower2carb.launch" />
+        <include file="$(find ants_local_planner_swarm)/launch/ant_follower3carb.launch" />
+        <include file="$(find ants_local_planner_swarm)/launch/ant_follower4carb.launch" />
+        <include file="$(find ants_local_planner_swarm)/launch/ant_follower5carb.launch" />
+    
+</launch>
+
+
+<!-- <launch>
+    <arg name="odom_topic" default="state_estimation"/>
+    <arg name="terrain_cloud_topic" default="terrain_map_ext"/>
+    <arg name="terrain_local_topic" default="terrain_map"/>
+    <arg name="scan_cloud_topic" default="registered_scan"/>
+    <arg name="config" default="default"/>
+    <arg name="config2" default="default2"/>
+    <arg name="config3" default="default3"/>
+    <arg name="config4" default="default4"/>
+    <arg name="config5" default="default5"/>
+
+    <group ns = "ant01">
+        <node pkg="ants_far_planner" type="ants_far_planner" name="ants_far_planner" output="screen">
+            <rosparam command="load" file="$(find ants_far_planner)/config/$(arg config).yaml" />
+            <param name="NameSpace" type="string" value="ant01" />
+            <remap from="/odom_world" to="$(arg odom_topic)"/> 
+            <remap from="/terrain_cloud" to="$(arg terrain_cloud_topic)"/>
+            <remap from="/scan_cloud" to="$(arg scan_cloud_topic)"/>
+            <remap from="/terrain_local_cloud" to="$(arg terrain_local_topic)"/>
+        </node>
+    </group>
+    <include file="$(find v_graph_decoder)/launch/decoder.launch" />
+
+    <group ns = "ant02">
+        <node pkg="ants_far_planner" type="ants_far_planner" name="ants_far_planner" output="screen">
+            <rosparam command="load" file="$(find ants_far_planner)/config/$(arg config2).yaml" />
+            <param name="NameSpace" type="string" value="ant02" />
+            <remap from="/odom_world" to="$(arg odom_topic)"/> 
+            <remap from="/terrain_cloud" to="$(arg terrain_cloud_topic)"/>
+            <remap from="/scan_cloud" to="$(arg scan_cloud_topic)"/>
+            <remap from="/terrain_local_cloud" to="$(arg terrain_local_topic)"/>
+        </node>  
+    </group>
+    <include file="$(find v_graph_decoder)/launch/decoder2car.launch" />
+
+    <group ns = "ant03">
+        <node pkg="ants_far_planner" type="ants_far_planner" name="ants_far_planner" output="screen">
+            <rosparam command="load" file="$(find ants_far_planner)/config/$(arg config3).yaml" />
+            <param name="NameSpace" type="string" value="ant03" />
+            <remap from="/odom_world" to="$(arg odom_topic)"/> 
+            <remap from="/terrain_cloud" to="$(arg terrain_cloud_topic)"/>
+            <remap from="/scan_cloud" to="$(arg scan_cloud_topic)"/>
+            <remap from="/terrain_local_cloud" to="$(arg terrain_local_topic)"/>
+        </node>     
+    </group>
+    <include file="$(find v_graph_decoder)/launch/decoder3car.launch" />
+
+    <group ns = "ant04">
+        <node pkg="ants_far_planner" type="ants_far_planner" name="ants_far_planner" output="screen">
+            <rosparam command="load" file="$(find ants_far_planner)/config/$(arg config4).yaml" />
+            <param name="NameSpace" type="string" value="ant04" />
+            <remap from="/odom_world" to="$(arg odom_topic)"/> 
+            <remap from="/terrain_cloud" to="$(arg terrain_cloud_topic)"/>
+            <remap from="/scan_cloud" to="$(arg scan_cloud_topic)"/>
+            <remap from="/terrain_local_cloud" to="$(arg terrain_local_topic)"/>
+        </node>   
+    </group>
+    <include file="$(find v_graph_decoder)/launch/decoder4car.launch" />
+
+    <group ns = "ant05">
+        <node pkg="ants_far_planner" type="ants_far_planner" name="ants_far_planner" output="screen">
+            <rosparam command="load" file="$(find ants_far_planner)/config/$(arg config5).yaml" />
+            <param name="NameSpace" type="string" value="ant05" />
+            <remap from="/odom_world" to="$(arg odom_topic)"/> 
+            <remap from="/terrain_cloud" to="$(arg terrain_cloud_topic)"/>
+            <remap from="/scan_cloud" to="$(arg scan_cloud_topic)"/>
+            <remap from="/terrain_local_cloud" to="$(arg terrain_local_topic)"/>
+        </node>
+    </group>
+    <include file="$(find v_graph_decoder)/launch/decoder5car.launch" />
+    
+    <node type="rviz" name="far_rviz" pkg="rviz" args="-d $(find ants_far_planner)/rviz/default5car.rviz" respawn="true"/>
+    
+</launch> -->

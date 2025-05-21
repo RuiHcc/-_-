@@ -1,0 +1,34 @@
+<!-- <launch>
+
+  <node pkg="swarm_bridge" name="drone_bridge_node2" type="bridge_node_ants" output="screen">
+  
+    <remap from="/state_estimation" to="/ant02/state_estimation"/>
+    <remap from="/others_odom" to="/msg_in_bridge2"/>
+
+    <param name="broadcast_ip" value="127.0.0.255" type="string"/>
+    <param name="drone_id" value="2"/>
+    <param name="odom_max_freq" value="70"/>
+
+  </node>
+
+</launch> -->
+
+
+<launch>
+
+  <arg name="namespace" default="ant02"/>
+
+  <node pkg="swarm_bridge" name="drone_bridge_node2" type="bridge_node_ants" output="screen">
+  
+    <remap from="/state_estimation" to="/ant02/state_estimation"/>
+    <remap from="/others_odom" to="/msg_in_bridge2"/>
+
+    <param name="broadcast_ip" value="192.168.2.255" type="string"/>
+    <param name="drone_id" value="2"/>
+    <param name="drone_num" value="5"/>
+    <param name="odom_max_freq" value="70"/>
+    <param name="NameSpace" type="string" value="$(arg namespace)" />
+
+  </node>
+
+</launch>

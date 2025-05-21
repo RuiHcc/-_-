@@ -1,0 +1,24 @@
+<launch>
+    <arg name="send_port_Remote" default="1234"/>
+    <arg name="receive_port_Remote" default="12345"/>
+    <arg name="send_port_vehicle" default="12345"/>
+    <arg name="receive_port_vehicle" default="123456"/>
+    <arg name="server_ip_Remote" default="127.0.0.5"/>
+    <arg name="client_ip_Remote" default="127.0.0.6"/>
+    <arg name="server_ip_vehicle" default="127.0.0.5"/>
+    <arg name="client_ip_vehicle" default="127.0.0.6"/>
+
+    <node pkg="ants_paths_follower" type="UdpRemote" name="UdpRemote" output="screen" respawn="true">
+      <param name="send_port_Remote" type="int" value="$(arg send_port_Remote)" />
+      <param name="receive_port_Remote" type="int" value="$(arg receive_port_Remote)" />
+      <param name="server_ip_Remote" type="string" value="$(arg server_ip_Remote)" />
+      <param name="client_ip_Remote" type="string" value="$(arg client_ip_Remote)" />
+    </node>
+
+    <node pkg="ants_paths_follower" type="UdpVehicle" name="UdpVehicle" output="screen" required="true">
+      <param name="send_port_vehicle" type="int" value="$(arg send_port_vehicle)" />
+      <param name="receive_port_vehicle" type="int" value="$(arg receive_port_vehicle)" />
+      <param name="server_ip_vehicle" type="string" value="$(arg server_ip_vehicle)" />
+      <param name="client_ip_vehicle" type="string" value="$(arg client_ip_vehicle)" />
+    </node>
+</launch>

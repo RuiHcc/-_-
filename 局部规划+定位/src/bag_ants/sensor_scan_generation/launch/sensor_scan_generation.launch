@@ -1,0 +1,8 @@
+<launch>
+<arg name="namespace" default="ant01"/>
+<group ns = "$(arg namespace)">
+  <node pkg="sensor_scan_generation" type="sensorScanGeneration" name="sensorScanGeneration" output="screen" required="true">
+    <param name="namespace" value="$(arg namespace)" />
+  </node>
+</group>
+</launch>

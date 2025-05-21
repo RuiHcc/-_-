@@ -1,0 +1,4 @@
+Key the_key
+
+geometry_msgs/PoseWithCovariance measurement
+float64 noise

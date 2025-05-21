@@ -1,0 +1,5 @@
+int32 from_id
+int32 to_id
+
+bool pose_graph_receive_flag
+bool point_cloud_receive_flag

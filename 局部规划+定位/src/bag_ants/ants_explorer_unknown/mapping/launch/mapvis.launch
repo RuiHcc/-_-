@@ -1,0 +1,6 @@
+<launch>
+  <node name="mapping_vis" pkg="mapping" type="mapping_vis_node">
+    <remap from="~gridmap" to="gridmap"/>
+    <remap from="~gridmap_inflate" to="gridmap_inflate"/>
+    </node>
+</launch>

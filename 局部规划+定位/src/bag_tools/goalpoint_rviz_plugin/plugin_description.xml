@@ -1,0 +1,45 @@
+<library path="lib/libgoalpoint_rviz_plugin01">
+    <class name="rviz/GoalPointToolAnt01"
+           type="rviz::GoalPointTool1"
+           base_class_type="rviz::Tool">
+        <description>
+            A tool for sending goalpoint to ant01
+        </description>
+    </class>
+</library>
+<library path="lib/libgoalpoint_rviz_plugin02">
+    <class name="rviz/GoalPointToolAnt02"
+           type="rviz::GoalPointTool2"
+           base_class_type="rviz::Tool">
+        <description>
+            A tool for sending goalpoint to ant02
+        </description>
+    </class>
+</library>
+<library path="lib/libgoalpoint_rviz_plugin03">
+    <class name="rviz/GoalPointToolAnt03"
+           type="rviz::GoalPointTool3"
+           base_class_type="rviz::Tool">
+        <description>
+            A tool for sending goalpoint to ant03
+        </description>
+    </class>
+</library>
+<library path="lib/libgoalpoint_rviz_plugin04">
+    <class name="rviz/GoalPointToolAnt04"
+           type="rviz::GoalPointTool4"
+           base_class_type="rviz::Tool">
+        <description>
+            A tool for sending goalpoint to ant04
+        </description>
+    </class>
+</library>
+<library path="lib/libgoalpoint_rviz_plugin05">
+    <class name="rviz/GoalPointToolAnt05"
+           type="rviz::GoalPointTool5"
+           base_class_type="rviz::Tool">
+        <description>
+            A tool for sending goalpoint to ant05
+        </description>
+    </class>
+</library>

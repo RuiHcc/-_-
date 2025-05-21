@@ -1,0 +1,143 @@
+<launch>
+    <arg name="namespace" default="ant02"/>
+    <arg name="car_id" value="1"/>
+    <!-- 定位参数 -->
+
+    <!-- 底盘驱动参数 -->
+    <arg name="send_port_Remote" default="1"/>
+    <arg name="receive_port_Remote" default="2"/>
+    <arg name="server_ip_Remote" default="127.0.0.1"/>
+    <arg name="client_ip_Remote" default="127.0.0.2"/>
+
+    <arg name="send_port_vehicle" default="3"/>
+    <arg name="receive_port_vehicle" default="4"/>
+    <arg name="server_ip_vehicle" default="127.0.0.3"/>
+    <arg name="client_ip_vehicle" default="127.0.0.4"/>
+    <!-- 规划控制参数 -->
+    <arg name="leader" default="true"/>
+    <arg name="cameraOffsetZ" default="0"/>
+    <arg name="sensorOffsetX" default="0"/>
+    <arg name="sensorOffsetY" default="0"/>
+    <arg name="vehicleX" default="0"/>
+    <arg name="vehicleY" default="1"/>
+    <arg name="terrainZ" default="0"/>
+    <arg name="vehicleYaw" default="0"/>
+    <arg name="gazebo_gui" default="false"/>
+    <arg name="checkTerrainConn" default="true"/>
+    <!-- 编队参数   TODO: ID不用设置，读取ant01中的数字然后自动减一 -->
+    <arg name="ID" default="0"/>    
+    <arg name="formation_length_unit" default="2.5"/>
+    <arg name="cubic_spline_hz" default="10.0"/>
+    <arg name="Kp" default="0.25"/>
+    <arg name="Ki" default="0.0"/>
+    <arg name="Kd" default="0.0"/>
+    <arg name="Kp2" default="0.25"/>
+    <arg name="Ki2" default="0.05"/>
+    <arg name="Kd2" default="0.0"/>
+    <arg name="Kp1" default="0.45"/>
+    <arg name="Kd1" default="0.25"/>
+    <arg name="overall_length" default="3"/>
+    <arg name="formation_type" default="0"/>
+    <arg name="controller_type" default="1"/>
+    <arg name="headway" default="3"/>
+    <arg name="emlike_hz" default="25"/>
+    <arg name="add_lateral_threshold" default="0.3"/>
+    <arg name="add_yaw_threshold" default="0.52"/>
+    <arg name="vmin" default="0.0"/>
+    <arg name="vmax" default="2.0"/>
+    <arg name="max_deceleration" default="0.3"/>
+    <arg name="max_acceleration" default="0.3"/>
+    <arg name="forecast_time" default="0.8"/>
+    <arg name="reconfiguration_duration" default="3.0"/>
+
+    <arg name="maxSpeed" default="0.6"/>
+    <arg name="is_coordinate" default="true"/>
+
+    <group ns = "$(arg namespace)">
+
+        <!-- 启动定位相关模块 -->
+        <!-- <include file="$(find vehicle_rea)/launch/sub_module/location.launch">
+        </include>
+        <include file="$(find ants_location_interface)/launch/ants_location_interface_rea.launch">
+        </include> -->
+
+        <!-- 与底盘UDP通信部分，首先启动操纵端，然后启动通信端发送指令并解析回报的数据 -->
+        <!-- <include file="$(find vehicle_rea)/launch/sub_module/control_driver.launch">
+
+        <arg name="send_port_Remote" value="$(arg send_port_Remote)" />
+        <arg name="receive_port_Remote" value="$(arg receive_port_Remote)" />
+        <arg name="server_ip_Remote" value="$(arg server_ip_Remote)"/>
+        <arg name="client_ip_Remote" value="$(arg client_ip_Remote)"/>
+
+        <arg name="send_port_vehicle" value="$(arg send_port_vehicle)" />
+        <arg name="receive_port_vehicle" value="$(arg receive_port_vehicle)"/>
+        <arg name="server_ip_vehicle" value="$(arg server_ip_vehicle)"/>
+        <arg name="client_ip_vehicle" value="$(arg client_ip_vehicle)"/>
+        </include> -->
+
+        <!-- 启动规划与控制模块 -->
+        <group if="$(arg leader)">
+            <include file="$(find ants_local_planner_free)/launch/local_planner_free_rea.launch" >
+                <arg name="cameraOffsetZ" value="$(arg cameraOffsetZ)"/>
+                <arg name="goalX" value="$(arg vehicleX)"/>
+                <arg name="goalY" value="$(arg vehicleY)"/>
+                <arg name="maxSpeed" value="$(arg maxSpeed)"/>
+                <arg name="namespace" value="$(arg namespace)" />
+            </include>
+        </group>
+
+        <!-- 启动规控通用模组 -->
+        <include file="$(find ants_paths_follower)/launch/paths_follower_rea.launch" >
+            <arg name="namespace" value="$(arg namespace)" />
+            <arg name="cameraOffsetZ" value="$(arg cameraOffsetZ)"/>
+            <arg name="goalX" value="$(arg vehicleX)"/>
+            <arg name="goalY" value="$(arg vehicleY)"/>
+        </include>
+
+        <include file="$(find ants_passable_area_analysis)/launch/ants_passable_area_analysis_rea.launch" >
+            <arg name="checkTerrainConn" value="$(arg checkTerrainConn)"/>
+            <arg name="namespace" value="$(arg namespace)" />
+        </include>
+
+        <include file="$(find sensor_scan_generation)/launch/sensor_scan_generation_rea.launch" >
+            <arg name="namespace" value="$(arg namespace)"/>
+        </include>
+
+        <!-- 启动TF转化 -->
+        <node pkg="tf" type="static_transform_publisher" name="vehicleTransPublisher" 
+            args="-$(arg sensorOffsetX) -$(arg sensorOffsetY) 0 0 0 0 $(arg namespace)/sensor $(arg namespace)/vehicle 1000"/>
+
+        <node pkg="tf" type="static_transform_publisher" name="mapWorldPublisher" 
+            args="0 0 0 0 0 0 /map /world 1000"/>
+
+        <node pkg="tf" type="static_transform_publisher" name="sensorTransPublisher" 
+            args="0 0 $(arg cameraOffsetZ) -1.5707963 0 -1.5707963 $(arg namespace)/sensor $(arg namespace)/camera 1000"/>
+
+    </group>
+
+    <!-- 启动前沿探索点搜索 -->
+    <include file="$(find frontier_space)/launch/frontier_finder.launch" >
+        <arg name="namespace" value="$(arg namespace)" />
+        <arg name="car_id" value="$(arg car_id)" />
+        <arg name="is_coordinate"   value="$(arg is_coordinate)"/>
+    </include>
+
+    <include file="$(find task_allocation)/launch/task_allocation_z.launch" >
+        <arg name="namespace" value="$(arg namespace)" />
+        <arg name="drone_id" value="2" />
+        <arg name="drone_num" value="5" />   
+        <!-- 初始位置，设ants01为中心，ants02，在其左侧1m处 -->
+        <arg name="init_x"   value="$(arg vehicleX)"/>
+        <arg name="init_y"   value="$(arg vehicleY)"/>
+        <arg name="map_size_x" default="100.0"/>
+        <arg name="map_size_y" default="100.0"/>
+        <arg name="map_size_z" default="3.5"/>
+    </include>
+
+    <include file="$(find swarm_bridge)/launch/bridge2.launch" >
+        <arg name="namespace" value="$(arg namespace)" />
+        <arg name="drone_id" value="2" />
+        <arg name="drone_num" value="5" />   
+    </include>
+
+</launch>

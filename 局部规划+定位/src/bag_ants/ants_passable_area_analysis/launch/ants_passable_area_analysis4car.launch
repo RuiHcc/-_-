@@ -1,0 +1,66 @@
+<launch>
+    <arg name="checkTerrainConn" default="false"/>
+    <arg name="namespace" default="ant04"/>
+
+    <group ns = "$(arg namespace)">
+        <node pkg="ants_passable_area_analysis" type="ant_area_analysis_short" name="ant_area_analysis_short" output="screen" required="true">
+            <!-- 接口话题重定向 -->
+            <remap from="/terrain_map" to="terrain_map" />
+            <remap from="/state_estimation" to="state_estimation" />
+            <remap from="/registered_scan" to="registered_scan" />
+            <!-- 属性设置 -->
+            <param name="scanVoxelSize" type="double" value="0.05" />
+            <param name="decayTime" type="double" value="2.0" />
+            <param name="noDecayDis" type="double" value="4.0" />
+            <param name="clearingDis" type="double" value="8.0" />
+            <param name="useSorting" type="bool" value="false" />
+            <param name="quantileZ" type="double" value="0.25" />
+            <param name="considerDrop" type="bool" value="true" />
+            <param name="limitGroundLift" type="bool" value="false" />
+            <param name="maxGroundLift" type="double" value="0.15" />
+            <param name="clearDyObs" type="bool" value="true" />
+            <param name="minDyObsDis" type="double" value="0.3" />
+            <param name="minDyObsAngle" type="double" value="0" />
+            <param name="minDyObsRelZ" type="double" value="-0.5" />
+            <param name="absDyObsRelZThre" type="double" value="0.2" />
+            <param name="minDyObsVFOV" type="double" value="-16.0" />
+            <param name="maxDyObsVFOV" type="double" value="16.0" />
+            <param name="minDyObsPointNum" type="int" value="1" />
+            <param name="noDataObstacle" type="bool" value="false" />
+            <param name="noDataBlockSkipNum" type="int" value="0" />
+            <param name="minBlockPointNum" type="int" value="10" />
+            <param name="vehicleHeight" type="double" value="1.5" />
+            <param name="voxelPointUpdateThre" type="int" value="100" />
+            <param name="voxelTimeUpdateThre" type="double" value="2.0" />
+            <param name="minRelZ" type="double" value="-2.5" />
+            <param name="maxRelZ" type="double" value="1.0" />
+            <param name="disRatioZ" type="double" value="0.2" />
+        </node>
+
+        <node pkg="ants_passable_area_analysis" type="ant_area_analysis_long" name="ant_area_analysis_long" output="screen" required="true">
+            <!-- 接口话题重定向 -->
+            <remap from="/terrain_map" to="terrain_map" />
+            <remap from="/terrain_map_ext" to="terrain_map_ext" />
+            <remap from="/state_estimation" to="state_estimation" />
+            <remap from="/registered_scan" to="registered_scan" />
+            <!-- 属性设置 -->
+            <param name="scanVoxelSize" type="double" value="0.1" />
+            <param name="decayTime" type="double" value="10.0" />
+            <param name="noDecayDis" type="double" value="0" />
+            <param name="clearingDis" type="double" value="30.0" />
+            <param name="useSorting" type="bool" value="false" />
+            <param name="quantileZ" type="double" value="0.1" />
+            <param name="vehicleHeight" type="double" value="1.5" />
+            <param name="voxelPointUpdateThre" type="int" value="100" />
+            <param name="voxelTimeUpdateThre" type="double" value="2.0" />
+            <param name="lowerBoundZ" type="double" value="-2.5" />
+            <param name="upperBoundZ" type="double" value="1.0" />
+            <param name="disRatioZ" type="double" value="0.1" />
+            <param name="checkTerrainConn" type="bool" value="$(arg checkTerrainConn)" />
+            <param name="terrainConnThre" type="double" value="0.5" />
+            <param name="terrainUnderVehicle" type="double" value="-0.75" />
+            <param name="ceilingFilteringThre" type="double" value="2.0" />
+            <param name="localTerrainMapRadius" type="double" value="4.0" />
+        </node>
+    </group>
+</launch>

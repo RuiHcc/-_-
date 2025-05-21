@@ -1,0 +1,77 @@
+<launch>
+    <arg name="namespace" default="ant02"/>
+    <arg name="car_id" value="1"/>
+    <!-- 定位参数 -->
+
+    <!-- 规划控制参数 -->
+    <arg name="leader" default="true"/>
+    <arg name="cameraOffsetZ" default="0"/>
+    <arg name="sensorOffsetX" default="0"/>
+    <arg name="sensorOffsetY" default="0"/>
+    <arg name="vehicleX" default="1"/>
+    <arg name="vehicleY" default="0"/>
+    <arg name="terrainZ" default="0"/>
+    <arg name="vehicleYaw" default="0"/>
+    <arg name="gazebo_gui" default="false"/>
+    <arg name="checkTerrainConn" default="true"/>
+
+    <arg name="maxSpeed" default="0.6"/>
+    
+
+    <group ns = "$(arg namespace)">
+
+        <!-- 启动定位相关模块 -->
+        <include file="$(find vehicle_rea)/launch/sub_module/location_rslidar.launch">
+        </include>
+        <include file="$(find ants_location_interface)/launch/ants_location_interface_rea.launch">
+            <arg name="namespace" value="$(arg namespace)"/>        
+        </include> 
+
+
+        <group if="$(arg leader)">
+            <include file="$(find ants_local_planner_free)/launch/local_planner_free_rea.launch" >
+                <arg name="cameraOffsetZ" value="$(arg cameraOffsetZ)"/>
+                <arg name="goalX" value="$(arg vehicleX)"/>
+                <arg name="goalY" value="$(arg vehicleY)"/>
+                <arg name="maxSpeed" value="$(arg maxSpeed)"/>
+                <arg name="namespace" value="$(arg namespace)" />
+            </include>
+        </group>
+
+        <include file="$(find ants_paths_follower)/launch/paths_follower_rea.launch" >
+            <arg name="cameraOffsetZ" value="$(arg cameraOffsetZ)"/>
+            <arg name="goalX" value="$(arg vehicleX)"/>
+            <arg name="goalY" value="$(arg vehicleY)"/>
+            <arg name="namespace" value="$(arg namespace)" />
+        </include>
+
+        <include file="$(find ants_passable_area_analysis)/launch/ants_passable_area_analysis_rea.launch" >
+            <arg name="checkTerrainConn" value="$(arg checkTerrainConn)"/>
+        </include>
+
+        <include file="$(find sensor_scan_generation)/launch/sensor_scan_generation_rea.launch" >
+            <arg name="namespace" value="$(arg namespace)"/>
+        </include>
+
+        <!-- 启动TF转化 -->
+        <node pkg="tf" type="static_transform_publisher" name="vehicleTransPublisher" 
+            args="-$(arg sensorOffsetX) -$(arg sensorOffsetY) 0 0 0 0 $(arg namespace)/vehicle $(arg namespace)/sensor 1000"/>
+
+        <node pkg="tf" type="static_transform_publisher" name="mapWorldPublisher" 
+            args="0 0 0 0 0 0 /map /world 1000"/>
+
+        <node pkg="tf" type="static_transform_publisher" name="sensorTransPublisher" 
+            args="0 0 $(arg cameraOffsetZ) -1.5707963 0 -1.5707963 $(arg namespace)/vehicle $(arg namespace)/camera 1000"/>
+
+    </group>
+
+    <!-- 启动前沿探索点搜索 -->
+    <!-- <include file="$(find frontier_space)/launch/frontier_finder.launch" >
+        <arg name="namespace" value="$(arg namespace)" />
+        <arg name="car_id" value="$(arg car_id)" />
+    </include> -->
+        <node name="rviz" pkg="rviz" type="rviz" 
+  args="-d $(find vehicle_rea)/rviz/exercise.rviz">
+        </node>
+
+</launch>

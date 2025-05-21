@@ -1,0 +1,45 @@
+<library path="lib/libwaypoint_rviz_plugin01">
+    <class name="rviz/WaypointTool01"
+           type="rviz::WaypointTool1"
+           base_class_type="rviz::Tool">
+        <description>
+            A tool for sending waypoints to ant01
+        </description>
+    </class>
+</library>
+<library path="lib/libwaypoint_rviz_plugin02">
+    <class name="rviz/WaypointTool02"
+           type="rviz::WaypointTool2"
+           base_class_type="rviz::Tool">
+        <description>
+            A tool for sending waypoints to ant02
+        </description>
+    </class>
+</library>
+<library path="lib/libwaypoint_rviz_plugin03">
+    <class name="rviz/WaypointTool03"
+           type="rviz::WaypointTool3"
+           base_class_type="rviz::Tool">
+        <description>
+            A tool for sending waypoints to ant03
+        </description>
+    </class>
+</library>
+<library path="lib/libwaypoint_rviz_plugin04">
+    <class name="rviz/WaypointTool04"
+           type="rviz::WaypointTool4"
+           base_class_type="rviz::Tool">
+        <description>
+            A tool for sending waypoints to ant04
+        </description>
+    </class>
+</library>
+<library path="lib/libwaypoint_rviz_plugin05">
+    <class name="rviz/WaypointTool05"
+           type="rviz::WaypointTool5"
+           base_class_type="rviz::Tool">
+        <description>
+            A tool for sending waypoints to ant05
+        </description>
+    </class>
+</library>
